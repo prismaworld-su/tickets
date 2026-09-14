@@ -1,9 +1,9 @@
-package smp.cloud.tickets.ticket.command;
+package smp.cloud.velocity.ticket.command;
 
 import com.velocitypowered.api.command.SimpleCommand;
 import com.velocitypowered.api.proxy.Player;
-import smp.cloud.tickets.ticket.TicketMessageFormatter;
-import smp.cloud.tickets.ticket.TicketService;
+import smp.cloud.velocity.ticket.TicketMessageFormatter;
+import smp.cloud.velocity.ticket.TicketService;
 
 import java.util.Objects;
 

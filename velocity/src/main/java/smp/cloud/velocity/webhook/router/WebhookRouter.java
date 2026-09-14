@@ -1,13 +1,13 @@
-package smp.cloud.tickets.webhook.router;
+package smp.cloud.velocity.webhook.router;
 
-import smp.cloud.tickets.webhook.WebhookHandler;
-import smp.cloud.tickets.webhook.annotation.Delete;
-import smp.cloud.tickets.webhook.annotation.Get;
-import smp.cloud.tickets.webhook.annotation.Post;
-import smp.cloud.tickets.webhook.annotation.Put;
-import smp.cloud.tickets.webhook.http.HttpMethod;
-import smp.cloud.tickets.webhook.http.WebhookRequest;
-import smp.cloud.tickets.webhook.http.WebhookResponse;
+import smp.cloud.velocity.webhook.WebhookHandler;
+import smp.cloud.velocity.webhook.annotation.Delete;
+import smp.cloud.velocity.webhook.annotation.Get;
+import smp.cloud.velocity.webhook.annotation.Post;
+import smp.cloud.velocity.webhook.annotation.Put;
+import smp.cloud.velocity.webhook.http.HttpMethod;
+import smp.cloud.velocity.webhook.http.WebhookRequest;
+import smp.cloud.velocity.webhook.http.WebhookResponse;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

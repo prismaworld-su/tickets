@@ -1,4 +1,4 @@
-package smp.cloud.tickets.paper.gui;
+package smp.cloud.paper.gui;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -10,7 +10,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
-import smp.cloud.tickets.common.messaging.TicketSummary;
+import smp.cloud.common.messaging.TicketSummary;
 
 import java.util.ArrayList;
 import java.util.Collections;

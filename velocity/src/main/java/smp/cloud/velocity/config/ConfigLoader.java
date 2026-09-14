@@ -1,9 +1,9 @@
-package smp.cloud.tickets.config;
+package smp.cloud.velocity.config;
 
 import org.slf4j.Logger;
-import smp.cloud.tickets.toml.TomlParseException;
-import smp.cloud.tickets.toml.TomlParser;
-import smp.cloud.tickets.toml.TomlTable;
+import smp.cloud.velocity.toml.TomlParseException;
+import smp.cloud.velocity.toml.TomlParser;
+import smp.cloud.velocity.toml.TomlTable;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

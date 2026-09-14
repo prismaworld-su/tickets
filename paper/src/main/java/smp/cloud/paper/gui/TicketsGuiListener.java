@@ -1,4 +1,4 @@
-package smp.cloud.tickets.paper.gui;
+package smp.cloud.paper.gui;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -6,9 +6,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.plugin.Plugin;
-import smp.cloud.tickets.common.messaging.AcceptTicketPayload;
-import smp.cloud.tickets.common.messaging.TicketChannel;
-import smp.cloud.tickets.common.messaging.TicketProtocol;
+import smp.cloud.common.messaging.AcceptTicketPayload;
+import smp.cloud.common.messaging.TicketChannel;
+import smp.cloud.common.messaging.TicketProtocol;
 
 import java.util.UUID;
 

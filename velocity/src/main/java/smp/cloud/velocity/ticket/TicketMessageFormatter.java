@@ -1,4 +1,4 @@
-package smp.cloud.tickets.ticket;
+package smp.cloud.velocity.ticket;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;

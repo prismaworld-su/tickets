@@ -1,11 +1,11 @@
-package smp.cloud.tickets.ticket;
+package smp.cloud.velocity.ticket;
 
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
-import smp.cloud.tickets.common.messaging.AcceptTicketPayload;
-import smp.cloud.tickets.ticket.messaging.TicketMessenger;
+import smp.cloud.common.messaging.AcceptTicketPayload;
+import smp.cloud.velocity.ticket.messaging.TicketMessenger;
 
 import java.util.Objects;
 import java.util.Optional;

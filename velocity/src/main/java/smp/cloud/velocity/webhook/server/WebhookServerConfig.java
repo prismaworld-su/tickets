@@ -1,4 +1,4 @@
-package smp.cloud.tickets.webhook.server;
+package smp.cloud.velocity.webhook.server;
 
 public record WebhookServerConfig(String host, int port, int backlog) {
 

@@ -1,4 +1,4 @@
-package smp.cloud.tickets.ticket.messaging;
+package smp.cloud.velocity.ticket.messaging;
 
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
@@ -8,14 +8,14 @@ import com.velocitypowered.api.proxy.ServerConnection;
 import com.velocitypowered.api.proxy.messages.ChannelIdentifier;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import org.slf4j.Logger;
-import smp.cloud.tickets.common.messaging.AcceptTicketPayload;
-import smp.cloud.tickets.common.messaging.OpenGuiPayload;
-import smp.cloud.tickets.common.messaging.TicketChannel;
-import smp.cloud.tickets.common.messaging.TicketPayload;
-import smp.cloud.tickets.common.messaging.TicketProtocol;
-import smp.cloud.tickets.common.messaging.TicketSummary;
-import smp.cloud.tickets.ticket.Ticket;
-import smp.cloud.tickets.ticket.TicketMessage;
+import smp.cloud.common.messaging.AcceptTicketPayload;
+import smp.cloud.common.messaging.OpenGuiPayload;
+import smp.cloud.common.messaging.TicketChannel;
+import smp.cloud.common.messaging.TicketPayload;
+import smp.cloud.common.messaging.TicketProtocol;
+import smp.cloud.common.messaging.TicketSummary;
+import smp.cloud.velocity.ticket.Ticket;
+import smp.cloud.velocity.ticket.TicketMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;

@@ -1,14 +1,14 @@
-package smp.cloud.tickets.paper.messaging;
+package smp.cloud.paper.messaging;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
-import smp.cloud.tickets.common.messaging.OpenGuiPayload;
-import smp.cloud.tickets.common.messaging.TicketChannel;
-import smp.cloud.tickets.common.messaging.TicketPayload;
-import smp.cloud.tickets.common.messaging.TicketProtocol;
-import smp.cloud.tickets.paper.gui.TicketsGui;
+import smp.cloud.common.messaging.OpenGuiPayload;
+import smp.cloud.common.messaging.TicketChannel;
+import smp.cloud.common.messaging.TicketPayload;
+import smp.cloud.common.messaging.TicketProtocol;
+import smp.cloud.paper.gui.TicketsGui;
 
 import java.io.IOException;
 

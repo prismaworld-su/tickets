@@ -1,4 +1,4 @@
-package smp.cloud.tickets;
+package smp.cloud.velocity;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.command.CommandManager;
@@ -10,18 +10,18 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.slf4j.Logger;
-import smp.cloud.tickets.config.ConfigLoader;
-import smp.cloud.tickets.config.TicketingConfig;
-import smp.cloud.tickets.config.TicketsConfig;
-import smp.cloud.tickets.config.WebhookConfig;
-import smp.cloud.tickets.ticket.TicketRegistry;
-import smp.cloud.tickets.ticket.TicketService;
-import smp.cloud.tickets.ticket.chat.TicketChatListener;
-import smp.cloud.tickets.ticket.command.TicketCommand;
-import smp.cloud.tickets.ticket.command.TicketsCommand;
-import smp.cloud.tickets.ticket.messaging.TicketMessenger;
-import smp.cloud.tickets.webhook.handler.TicketsWebhookHandler;
-import smp.cloud.tickets.webhook.server.WebhookServer;
+import smp.cloud.velocity.config.ConfigLoader;
+import smp.cloud.velocity.config.TicketingConfig;
+import smp.cloud.velocity.config.TicketsConfig;
+import smp.cloud.velocity.config.WebhookConfig;
+import smp.cloud.velocity.ticket.TicketRegistry;
+import smp.cloud.velocity.ticket.TicketService;
+import smp.cloud.velocity.ticket.chat.TicketChatListener;
+import smp.cloud.velocity.ticket.command.TicketCommand;
+import smp.cloud.velocity.ticket.command.TicketsCommand;
+import smp.cloud.velocity.ticket.messaging.TicketMessenger;
+import smp.cloud.velocity.webhook.handler.TicketsWebhookHandler;
+import smp.cloud.velocity.webhook.server.WebhookServer;
 
 import java.io.IOException;
 import java.nio.file.Path;

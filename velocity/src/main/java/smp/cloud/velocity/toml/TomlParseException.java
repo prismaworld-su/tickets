@@ -1,4 +1,4 @@
-package smp.cloud.tickets.toml;
+package smp.cloud.velocity.toml;
 
 public final class TomlParseException extends RuntimeException {
 

@@ -1,14 +1,14 @@
-package smp.cloud.tickets.webhook.server;
+package smp.cloud.velocity.webhook.server;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.slf4j.Logger;
-import smp.cloud.tickets.webhook.WebhookHandler;
-import smp.cloud.tickets.webhook.http.HttpMethod;
-import smp.cloud.tickets.webhook.http.WebhookRequest;
-import smp.cloud.tickets.webhook.http.WebhookResponse;
-import smp.cloud.tickets.webhook.router.WebhookRouter;
+import smp.cloud.velocity.webhook.WebhookHandler;
+import smp.cloud.velocity.webhook.http.HttpMethod;
+import smp.cloud.velocity.webhook.http.WebhookRequest;
+import smp.cloud.velocity.webhook.http.WebhookResponse;
+import smp.cloud.velocity.webhook.router.WebhookRouter;
 
 import java.io.IOException;
 import java.io.InputStream;

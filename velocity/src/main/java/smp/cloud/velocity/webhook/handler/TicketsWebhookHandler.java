@@ -1,6 +1,6 @@
-package smp.cloud.tickets.webhook.handler;
+package smp.cloud.velocity.webhook.handler;
 
-import smp.cloud.tickets.webhook.WebhookHandler;
+import smp.cloud.velocity.webhook.WebhookHandler;
 
 public final class TicketsWebhookHandler implements WebhookHandler {
 }

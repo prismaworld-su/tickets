@@ -1,6 +1,6 @@
-package smp.cloud.tickets.config;
+package smp.cloud.velocity.config;
 
-import smp.cloud.tickets.webhook.server.WebhookServerConfig;
+import smp.cloud.velocity.webhook.server.WebhookServerConfig;
 
 public record WebhookConfig(boolean enabled, String host, int port, int backlog) {
 

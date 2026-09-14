@@ -1,4 +1,4 @@
-package smp.cloud.tickets.ticket;
+package smp.cloud.velocity.ticket;
 
 import java.time.Instant;
 import java.util.List;

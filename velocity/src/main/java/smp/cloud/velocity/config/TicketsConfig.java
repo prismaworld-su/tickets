@@ -1,4 +1,4 @@
-package smp.cloud.tickets.config;
+package smp.cloud.velocity.config;
 
 public record TicketsConfig(WebhookConfig webhook, TicketingConfig ticketing) {
 

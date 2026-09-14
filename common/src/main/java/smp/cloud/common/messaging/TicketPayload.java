@@ -1,4 +1,4 @@
-package smp.cloud.tickets.common.messaging;
+package smp.cloud.common.messaging;
 
 import java.io.DataOutput;
 import java.io.IOException;

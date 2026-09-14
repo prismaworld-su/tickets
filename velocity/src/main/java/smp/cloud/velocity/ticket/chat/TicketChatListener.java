@@ -1,10 +1,10 @@
-package smp.cloud.tickets.ticket.chat;
+package smp.cloud.velocity.ticket.chat;
 
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.proxy.Player;
-import smp.cloud.tickets.ticket.TicketService;
+import smp.cloud.velocity.ticket.TicketService;
 
 import java.util.Objects;
 

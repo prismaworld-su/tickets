@@ -1,4 +1,4 @@
-package smp.cloud.tickets.webhook.annotation;
+package smp.cloud.velocity.webhook.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

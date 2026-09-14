@@ -1,9 +1,9 @@
-package smp.cloud.tickets.paper;
+package smp.cloud.paper;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import smp.cloud.tickets.common.messaging.TicketChannel;
-import smp.cloud.tickets.paper.gui.TicketsGuiListener;
-import smp.cloud.tickets.paper.messaging.TicketsPluginMessageListener;
+import smp.cloud.common.messaging.TicketChannel;
+import smp.cloud.paper.gui.TicketsGuiListener;
+import smp.cloud.paper.messaging.TicketsPluginMessageListener;
 
 public final class TicketsPaperPlugin extends JavaPlugin {
 

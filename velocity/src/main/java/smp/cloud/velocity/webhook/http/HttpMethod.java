@@ -1,4 +1,4 @@
-package smp.cloud.tickets.webhook.http;
+package smp.cloud.velocity.webhook.http;
 
 public enum HttpMethod {
 
