@@ -12,4 +12,10 @@ tasks {
     build {
         dependsOn(shadowJar)
     }
+
+    shadowJar {
+        archiveBaseName.set("tickets-paper")
+        archiveClassifier.set("")
+        destinationDirectory.set(rootProject.layout.buildDirectory.dir("libs"))
+    }
 }

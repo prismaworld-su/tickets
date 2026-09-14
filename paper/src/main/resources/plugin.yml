@@ -1,5 +1,5 @@
 name: tickets-paper
-version: '1.0-SNAPSHOT'
+version: '1.0'
 main: smp.cloud.paper.TicketsPaperPlugin
 api-version: '1.21'
 description: 'Backend companion for the tickets Velocity plugin: renders the tickets GUI.'

@@ -15,6 +15,12 @@ tasks {
         dependsOn(shadowJar)
     }
 
+    shadowJar {
+        archiveBaseName.set("tickets-velocity")
+        archiveClassifier.set("")
+        destinationDirectory.set(rootProject.layout.buildDirectory.dir("libs"))
+    }
+
     runVelocity {
         velocityVersion("3.5.0-SNAPSHOT")
     }
