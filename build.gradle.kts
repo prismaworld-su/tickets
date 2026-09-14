@@ -1,7 +1,3 @@
-plugins {
-    id("java-library") apply false
-}
-
 allprojects {
     group = "smp.cloud"
     version = "1.0-SNAPSHOT"
