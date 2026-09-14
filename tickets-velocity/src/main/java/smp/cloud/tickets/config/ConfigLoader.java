@@ -30,6 +30,17 @@ public final class ConfigLoader {
 
             # TCP accept backlog. 0 means "use the system default".
             backlog = 0
+
+            [tickets]
+            # Enable the ticket system (/ticket, /tickets, ? chat prefix).
+            enabled = true
+
+            # Permission required to open /tickets and accept tickets.
+            staff-permission = "tickets.staff"
+
+            # Chat prefix that routes the rest of the message into the ticket.
+            # Set to an empty string to disable the alias.
+            chat-prefix = "?"
             """;
 
     private final Path dataDirectory;
@@ -63,14 +74,23 @@ public final class ConfigLoader {
     }
 
     private TicketsConfig fromToml(TomlTable root) {
-        WebhookConfig defaults = WebhookConfig.defaults();
+        WebhookConfig webhookDefaults = WebhookConfig.defaults();
         TomlTable webhookTable = root.getTable("webhook").orElseGet(TomlTable::empty);
         WebhookConfig webhook = new WebhookConfig(
-                webhookTable.getBooleanOr("enabled", defaults.enabled()),
-                webhookTable.getStringOr("host", defaults.host()),
-                webhookTable.getIntOr("port", defaults.port()),
-                webhookTable.getIntOr("backlog", defaults.backlog())
+                webhookTable.getBooleanOr("enabled", webhookDefaults.enabled()),
+                webhookTable.getStringOr("host", webhookDefaults.host()),
+                webhookTable.getIntOr("port", webhookDefaults.port()),
+                webhookTable.getIntOr("backlog", webhookDefaults.backlog())
         );
-        return new TicketsConfig(webhook);
+
+        TicketingConfig ticketingDefaults = TicketingConfig.defaults();
+        TomlTable ticketsTable = root.getTable("tickets").orElseGet(TomlTable::empty);
+        TicketingConfig ticketing = new TicketingConfig(
+                ticketsTable.getBooleanOr("enabled", ticketingDefaults.enabled()),
+                ticketsTable.getStringOr("staff-permission", ticketingDefaults.staffPermission()),
+                ticketsTable.getStringOr("chat-prefix", ticketingDefaults.chatPrefix())
+        );
+
+        return new TicketsConfig(webhook, ticketing);
     }
 }

@@ -1,0 +1,6 @@
+name: tickets-paper
+version: '1.0-SNAPSHOT'
+main: smp.cloud.tickets.paper.TicketsPaperPlugin
+api-version: '1.21'
+description: 'Backend companion for the tickets Velocity plugin: renders the tickets GUI.'
+authors: [losexds]
