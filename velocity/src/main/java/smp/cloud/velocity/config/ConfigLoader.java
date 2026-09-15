@@ -38,8 +38,10 @@ public final class ConfigLoader {
             # Permission required to open /tickets and accept tickets.
             staff-permission = "tickets.staff"
 
-            # Chat prefix that routes the rest of the message into the ticket.
-            # Set to an empty string to disable the alias.
+            # Extra slash-command alias for /ticket. E.g. with "?" you can type
+            # "/? your message" to reach the ticket. Set to an empty string to
+            # disable the extra alias. Signed chat in Minecraft 1.19.1+ makes
+            # non-slash chat prefixes impossible to intercept on the proxy.
             chat-prefix = "?"
             """;
 

@@ -29,6 +29,7 @@ public final class TicketProtocol {
             return switch (id) {
                 case OpenGuiPayload.ID -> OpenGuiPayload.readFrom(in);
                 case AcceptTicketPayload.ID -> AcceptTicketPayload.readFrom(in);
+                case StaffStatusPayload.ID -> StaffStatusPayload.readFrom(in);
                 default -> throw new IOException("Unknown ticket payload id: " + id);
             };
         }

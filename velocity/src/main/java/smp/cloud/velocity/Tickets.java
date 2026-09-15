@@ -16,7 +16,6 @@ import smp.cloud.velocity.config.TicketsConfig;
 import smp.cloud.velocity.config.WebhookConfig;
 import smp.cloud.velocity.ticket.TicketRegistry;
 import smp.cloud.velocity.ticket.TicketService;
-import smp.cloud.velocity.ticket.chat.TicketChatListener;
 import smp.cloud.velocity.ticket.command.TicketCommand;
 import smp.cloud.velocity.ticket.command.TicketsCommand;
 import smp.cloud.velocity.ticket.messaging.TicketMessenger;
@@ -95,19 +94,23 @@ public class Tickets {
         TicketMessenger messenger = new TicketMessenger(logger);
         TicketService service = new TicketService(proxy, registry, messenger, logger);
         messenger.setAcceptHandler(service::onAcceptFromBackend);
+        messenger.setStaffStatusHandler(payload -> service.updateBackendStaff(payload.playerId(), payload.staff()));
 
         proxy.getChannelRegistrar().register(messenger.channel());
         proxy.getEventManager().register(this, messenger);
-        proxy.getEventManager().register(this, new TicketChatListener(service, config.chatPrefix()));
 
         CommandManager commands = proxy.getCommandManager();
-        CommandMeta ticketMeta = commands.metaBuilder("ticket").plugin(this).build();
-        commands.register(ticketMeta, new TicketCommand(service));
+        CommandMeta.Builder ticketMetaBuilder = commands.metaBuilder("ticket").aliases("t").plugin(this);
+        String prefix = config.chatPrefix();
+        if (!prefix.isEmpty()) {
+            ticketMetaBuilder.aliases(prefix);
+        }
+        commands.register(ticketMetaBuilder.build(), new TicketCommand(service));
         CommandMeta ticketsMeta = commands.metaBuilder("tickets").plugin(this).build();
         commands.register(ticketsMeta, new TicketsCommand(service, config.staffPermission()));
 
         this.ticketMessenger = messenger;
-        logger.info("Ticket system started (prefix='{}', staff-permission='{}')",
-                config.chatPrefix(), config.staffPermission());
+        logger.info("Ticket system started (aliases='ticket', 't', '{}'; staff-permission='{}')",
+                prefix, config.staffPermission());
     }
 }

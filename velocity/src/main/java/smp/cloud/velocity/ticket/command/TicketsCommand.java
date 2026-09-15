@@ -23,7 +23,7 @@ public final class TicketsCommand implements SimpleCommand {
             invocation.source().sendMessage(TicketMessageFormatter.error("Команда доступна только игрокам."));
             return;
         }
-        if (!player.hasPermission(permission)) {
+        if (!isAuthorized(player)) {
             player.sendMessage(TicketMessageFormatter.error("Недостаточно прав."));
             return;
         }
@@ -32,6 +32,13 @@ public final class TicketsCommand implements SimpleCommand {
 
     @Override
     public boolean hasPermission(Invocation invocation) {
-        return !(invocation.source() instanceof Player player) || player.hasPermission(permission);
+        if (!(invocation.source() instanceof Player player)) {
+            return true;
+        }
+        return isAuthorized(player);
+    }
+
+    private boolean isAuthorized(Player player) {
+        return player.hasPermission(permission) || service.isBackendStaff(player.getUniqueId());
     }
 }

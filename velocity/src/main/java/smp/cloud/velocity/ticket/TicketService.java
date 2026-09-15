@@ -9,7 +9,9 @@ import smp.cloud.velocity.ticket.messaging.TicketMessenger;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class TicketService {
 
@@ -17,6 +19,7 @@ public final class TicketService {
     private final TicketRegistry registry;
     private final TicketMessenger messenger;
     private final Logger logger;
+    private final Set<UUID> backendStaff = ConcurrentHashMap.newKeySet();
 
     public TicketService(ProxyServer proxy, TicketRegistry registry, TicketMessenger messenger, Logger logger) {
         this.proxy = Objects.requireNonNull(proxy, "proxy");
@@ -29,8 +32,16 @@ public final class TicketService {
         return registry;
     }
 
-    public boolean hasOpenOwnedTicket(UUID playerId) {
-        return registry.getOpenTicketByOwner(playerId).isPresent();
+    public boolean isBackendStaff(UUID playerId) {
+        return backendStaff.contains(playerId);
+    }
+
+    public void updateBackendStaff(UUID playerId, boolean staff) {
+        if (staff) {
+            backendStaff.add(playerId);
+        } else {
+            backendStaff.remove(playerId);
+        }
     }
 
     public void sendMessage(Player sender, String content) {

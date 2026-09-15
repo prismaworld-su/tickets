@@ -10,6 +10,7 @@ import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import org.slf4j.Logger;
 import smp.cloud.common.messaging.AcceptTicketPayload;
 import smp.cloud.common.messaging.OpenGuiPayload;
+import smp.cloud.common.messaging.StaffStatusPayload;
 import smp.cloud.common.messaging.TicketChannel;
 import smp.cloud.common.messaging.TicketPayload;
 import smp.cloud.common.messaging.TicketProtocol;
@@ -31,6 +32,7 @@ public final class TicketMessenger {
     private final Logger logger;
     private final ChannelIdentifier channel;
     private volatile Consumer<AcceptTicketPayload> acceptHandler = payload -> {};
+    private volatile Consumer<StaffStatusPayload> staffStatusHandler = payload -> {};
 
     public TicketMessenger(Logger logger) {
         this.logger = Objects.requireNonNull(logger, "logger");
@@ -43,6 +45,10 @@ public final class TicketMessenger {
 
     public void setAcceptHandler(Consumer<AcceptTicketPayload> handler) {
         this.acceptHandler = Objects.requireNonNull(handler, "handler");
+    }
+
+    public void setStaffStatusHandler(Consumer<StaffStatusPayload> handler) {
+        this.staffStatusHandler = Objects.requireNonNull(handler, "handler");
     }
 
     public boolean sendOpenGui(Player viewer, List<Ticket> tickets) {
@@ -70,10 +76,11 @@ public final class TicketMessenger {
         }
         try {
             TicketPayload payload = TicketProtocol.decode(event.getData());
-            if (payload instanceof AcceptTicketPayload accept) {
-                acceptHandler.accept(accept);
-            } else {
-                logger.warn("Unexpected payload on channel {}: {}", channel.getId(), payload.getClass().getSimpleName());
+            switch (payload) {
+                case AcceptTicketPayload accept -> acceptHandler.accept(accept);
+                case StaffStatusPayload staff -> staffStatusHandler.accept(staff);
+                default -> logger.warn("Unexpected payload on channel {}: {}", channel.getId(),
+                        payload.getClass().getSimpleName());
             }
         } catch (IOException e) {
             logger.warn("Failed to decode plugin message on {}", channel.getId(), e);
