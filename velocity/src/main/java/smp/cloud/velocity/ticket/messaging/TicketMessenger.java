@@ -15,6 +15,7 @@ import smp.cloud.common.messaging.TicketChannel;
 import smp.cloud.common.messaging.TicketPayload;
 import smp.cloud.common.messaging.TicketProtocol;
 import smp.cloud.common.messaging.TicketSummary;
+import smp.cloud.velocity.i18n.Messages;
 import smp.cloud.velocity.ticket.Ticket;
 import smp.cloud.velocity.ticket.TicketMessage;
 
@@ -24,18 +25,21 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public final class TicketMessenger {
 
     private static final int PREVIEW_LIMIT = 60;
 
     private final Logger logger;
+    private final Supplier<Messages> messagesSupplier;
     private final ChannelIdentifier channel;
     private volatile Consumer<AcceptTicketPayload> acceptHandler = payload -> {};
     private volatile Consumer<StaffStatusPayload> staffStatusHandler = payload -> {};
 
-    public TicketMessenger(Logger logger) {
+    public TicketMessenger(Logger logger, Supplier<Messages> messagesSupplier) {
         this.logger = Objects.requireNonNull(logger, "logger");
+        this.messagesSupplier = Objects.requireNonNull(messagesSupplier, "messagesSupplier");
         this.channel = MinecraftChannelIdentifier.create(TicketChannel.NAMESPACE, TicketChannel.NAME);
     }
 
@@ -56,11 +60,17 @@ public final class TicketMessenger {
         if (connection.isEmpty()) {
             return false;
         }
+        Messages messages = messagesSupplier.get();
         List<TicketSummary> summaries = new ArrayList<>(tickets.size());
         for (Ticket ticket : tickets) {
-            summaries.add(toSummary(ticket));
+            summaries.add(toSummary(ticket, messages));
         }
-        OpenGuiPayload payload = new OpenGuiPayload(viewer.getUniqueId(), summaries);
+        OpenGuiPayload payload = new OpenGuiPayload(
+                viewer.getUniqueId(),
+                messages.get(Messages.GUI_TITLE),
+                messages.get(Messages.GUI_HINT),
+                summaries
+        );
         connection.get().sendPluginMessage(channel, TicketProtocol.encode(payload));
         return true;
     }
@@ -87,10 +97,10 @@ public final class TicketMessenger {
         }
     }
 
-    private TicketSummary toSummary(Ticket ticket) {
+    private TicketSummary toSummary(Ticket ticket, Messages messages) {
         String preview = ticket.lastMessage()
                 .map(TicketMessage::content)
-                .orElse("(нет сообщений)");
+                .orElseGet(() -> messages.get(Messages.GUI_PREVIEW_EMPTY));
         if (preview.length() > PREVIEW_LIMIT) {
             preview = preview.substring(0, PREVIEW_LIMIT - 3) + "...";
         }

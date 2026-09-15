@@ -5,46 +5,55 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
+import smp.cloud.velocity.i18n.Messages;
+
+import java.util.Objects;
 
 public final class TicketMessageFormatter {
 
-    private TicketMessageFormatter() {
+    private final Messages messages;
+
+    public TicketMessageFormatter(Messages messages) {
+        this.messages = Objects.requireNonNull(messages, "messages");
     }
 
-    public static Component ticketMessage(Ticket ticket, TicketMessage message, boolean fromStaff) {
-        Component header = Component.text("[Тикет #" + ticket.displayId() + "] ", NamedTextColor.GOLD);
-        Component author = Component.text(message.authorName() + ": ",
-                fromStaff ? NamedTextColor.AQUA : NamedTextColor.YELLOW);
-        Component body = Component.text(message.content(), NamedTextColor.WHITE);
+    public Messages messages() {
+        return messages;
+    }
+
+    public Component ticketMessage(Ticket ticket, TicketMessage message, boolean fromStaff) {
+        String header = messages.format(Messages.CHAT_TICKET_PREFIX, "id", String.valueOf(ticket.displayId()));
+        String separator = messages.get(Messages.CHAT_BUTTON_SEPARATOR);
+        String keepOpenLabel = messages.get(Messages.CHAT_BUTTON_KEEP_OPEN);
+        String closeLabel = messages.get(Messages.CHAT_BUTTON_CLOSE);
         return Component.text()
-                .append(header)
-                .append(author)
-                .append(body)
-                .append(Component.text(" | ", NamedTextColor.DARK_GRAY))
-                .append(button("[Проблема актуальна]", NamedTextColor.GREEN, "/ticket keepopen"))
+                .append(Component.text(header, NamedTextColor.GOLD))
+                .append(Component.text(message.authorName() + ": ",
+                        fromStaff ? NamedTextColor.AQUA : NamedTextColor.YELLOW))
+                .append(Component.text(message.content(), NamedTextColor.WHITE))
+                .append(Component.text(separator, NamedTextColor.DARK_GRAY))
+                .append(button(keepOpenLabel, NamedTextColor.GREEN, "/ticket keepopen"))
                 .append(Component.text(" ", NamedTextColor.DARK_GRAY))
-                .append(button("[Закрыть обращение]", NamedTextColor.RED, "/ticket close"))
+                .append(button(closeLabel, NamedTextColor.RED, "/ticket close"))
                 .build();
     }
 
-    public static Component system(String text) {
-        return Component.text()
-                .append(Component.text("[Тикет] ", NamedTextColor.GOLD))
-                .append(Component.text(text, NamedTextColor.GRAY))
-                .build();
+    public Component info(String key, String... placeholders) {
+        return withPrefix(messages.format(key, placeholders), NamedTextColor.WHITE);
     }
 
-    public static Component info(String text) {
-        return Component.text()
-                .append(Component.text("[Тикет] ", NamedTextColor.GOLD))
-                .append(Component.text(text, NamedTextColor.WHITE))
-                .build();
+    public Component error(String key, String... placeholders) {
+        return withPrefix(messages.format(key, placeholders), NamedTextColor.RED);
     }
 
-    public static Component error(String text) {
+    public Component system(String key, String... placeholders) {
+        return withPrefix(messages.format(key, placeholders), NamedTextColor.GRAY);
+    }
+
+    private Component withPrefix(String body, NamedTextColor color) {
         return Component.text()
-                .append(Component.text("[Тикет] ", NamedTextColor.GOLD))
-                .append(Component.text(text, NamedTextColor.RED))
+                .append(Component.text(messages.get(Messages.CHAT_PREFIX), NamedTextColor.GOLD))
+                .append(Component.text(body, color))
                 .build();
     }
 

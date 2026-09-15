@@ -5,6 +5,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import net.kyori.adventure.text.Component;
 import org.slf4j.Logger;
 import smp.cloud.common.messaging.AcceptTicketPayload;
+import smp.cloud.velocity.i18n.Messages;
 import smp.cloud.velocity.ticket.messaging.TicketMessenger;
 
 import java.util.Objects;
@@ -18,18 +19,28 @@ public final class TicketService {
     private final ProxyServer proxy;
     private final TicketRegistry registry;
     private final TicketMessenger messenger;
+    private final TicketMessageFormatter formatter;
     private final Logger logger;
     private final Set<UUID> backendStaff = ConcurrentHashMap.newKeySet();
 
-    public TicketService(ProxyServer proxy, TicketRegistry registry, TicketMessenger messenger, Logger logger) {
+    public TicketService(ProxyServer proxy,
+                         TicketRegistry registry,
+                         TicketMessenger messenger,
+                         TicketMessageFormatter formatter,
+                         Logger logger) {
         this.proxy = Objects.requireNonNull(proxy, "proxy");
         this.registry = Objects.requireNonNull(registry, "registry");
         this.messenger = Objects.requireNonNull(messenger, "messenger");
+        this.formatter = Objects.requireNonNull(formatter, "formatter");
         this.logger = Objects.requireNonNull(logger, "logger");
     }
 
     public TicketRegistry registry() {
         return registry;
+    }
+
+    public TicketMessageFormatter formatter() {
+        return formatter;
     }
 
     public boolean isBackendStaff(UUID playerId) {
@@ -47,7 +58,7 @@ public final class TicketService {
     public void sendMessage(Player sender, String content) {
         String trimmed = content == null ? "" : content.trim();
         if (trimmed.isEmpty()) {
-            sender.sendMessage(TicketMessageFormatter.error("Пустое сообщение."));
+            sender.sendMessage(formatter.error(Messages.SYSTEM_EMPTY_MESSAGE));
             return;
         }
         Optional<Ticket> owned = registry.getOpenTicketByOwner(sender.getUniqueId());
@@ -62,12 +73,11 @@ public final class TicketService {
         }
         Optional<Ticket> created = registry.createTicket(sender.getUniqueId(), sender.getUsername());
         if (created.isEmpty()) {
-            sender.sendMessage(TicketMessageFormatter.error("У вас уже есть открытый тикет."));
+            sender.sendMessage(formatter.error(Messages.SYSTEM_ALREADY_OPEN));
             return;
         }
         Ticket ticket = created.get();
-        sender.sendMessage(TicketMessageFormatter.info(
-                "Тикет #" + ticket.displayId() + " создан. Ожидайте ответа администратора."));
+        sender.sendMessage(formatter.info(Messages.SYSTEM_CREATED, "id", String.valueOf(ticket.displayId())));
         appendMessage(ticket, sender, trimmed, false);
         logger.info("Ticket #{} opened by {} ({})", ticket.displayId(), sender.getUsername(), sender.getUniqueId());
     }
@@ -75,16 +85,17 @@ public final class TicketService {
     public void close(Player caller) {
         Optional<Ticket> ticket = findActiveTicket(caller);
         if (ticket.isEmpty()) {
-            caller.sendMessage(TicketMessageFormatter.error("У вас нет активного тикета."));
+            caller.sendMessage(formatter.error(Messages.SYSTEM_NO_ACTIVE));
             return;
         }
         Ticket t = ticket.get();
         if (!registry.close(t.id())) {
-            caller.sendMessage(TicketMessageFormatter.error("Не удалось закрыть тикет."));
+            caller.sendMessage(formatter.error(Messages.SYSTEM_CLOSE_FAILED));
             return;
         }
-        Component notice = TicketMessageFormatter.system(
-                "Тикет #" + t.displayId() + " закрыт " + caller.getUsername() + ".");
+        Component notice = formatter.system(Messages.SYSTEM_CLOSED,
+                "id", String.valueOf(t.displayId()),
+                "actor", caller.getUsername());
         deliverToParticipants(t, notice);
         logger.info("Ticket #{} closed by {}", t.displayId(), caller.getUsername());
     }
@@ -92,19 +103,21 @@ public final class TicketService {
     public void keepOpen(Player caller) {
         Optional<Ticket> ticket = findActiveTicket(caller);
         if (ticket.isEmpty()) {
-            caller.sendMessage(TicketMessageFormatter.error("У вас нет активного тикета."));
+            caller.sendMessage(formatter.error(Messages.SYSTEM_NO_ACTIVE));
             return;
         }
         Ticket t = ticket.get();
-        registry.addMessage(t, caller.getUniqueId(), caller.getUsername(), "«Проблема актуальна»");
-        Component notice = TicketMessageFormatter.system(
-                caller.getUsername() + " отметил тикет #" + t.displayId() + " как актуальный.");
+        String content = formatter.messages().get(Messages.SYSTEM_KEEP_OPEN_CONTENT);
+        registry.addMessage(t, caller.getUniqueId(), caller.getUsername(), content);
+        Component notice = formatter.system(Messages.SYSTEM_KEEP_OPEN_BROADCAST,
+                "actor", caller.getUsername(),
+                "id", String.valueOf(t.displayId()));
         deliverToParticipants(t, notice);
     }
 
     public void openGui(Player staff) {
         if (!messenger.sendOpenGui(staff, registry.listUnaccepted())) {
-            staff.sendMessage(TicketMessageFormatter.error("Вы не подключены к серверу."));
+            staff.sendMessage(formatter.error(Messages.SYSTEM_NOT_CONNECTED));
         }
     }
 
@@ -117,12 +130,12 @@ public final class TicketService {
         }
         Optional<Player> staff = proxy.getPlayer(payload.staffId());
         if (!accepted) {
-            staff.ifPresent(p -> p.sendMessage(
-                    TicketMessageFormatter.error("Тикет уже принят или недоступен.")));
+            staff.ifPresent(p -> p.sendMessage(formatter.error(Messages.SYSTEM_ALREADY_ACCEPTED)));
             return;
         }
-        Component notice = TicketMessageFormatter.info(
-                "Тикет #" + ticket.displayId() + " принят: " + payload.staffName() + ".");
+        Component notice = formatter.info(Messages.SYSTEM_ACCEPTED,
+                "id", String.valueOf(ticket.displayId()),
+                "staff", payload.staffName());
         deliverToParticipants(ticket, notice);
         logger.info("Ticket #{} accepted by {}", ticket.displayId(), payload.staffName());
     }
@@ -138,7 +151,7 @@ public final class TicketService {
     private void appendMessage(Ticket ticket, Player sender, String content, boolean fromStaff) {
         registry.addMessage(ticket, sender.getUniqueId(), sender.getUsername(), content);
         TicketMessage last = ticket.lastMessage().orElseThrow();
-        Component component = TicketMessageFormatter.ticketMessage(ticket, last, fromStaff);
+        Component component = formatter.ticketMessage(ticket, last, fromStaff);
         deliverToParticipants(ticket, component);
     }
 

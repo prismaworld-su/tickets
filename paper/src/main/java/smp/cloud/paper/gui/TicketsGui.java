@@ -10,6 +10,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
+import smp.cloud.common.messaging.OpenGuiPayload;
 import smp.cloud.common.messaging.TicketSummary;
 
 import java.util.ArrayList;
@@ -27,13 +28,17 @@ public final class TicketsGui implements InventoryHolder {
     private static final int[] ROW_PRIORITY = {2, 3, 1, 4};
 
     private final UUID viewerId;
+    private final String title;
+    private final String hint;
     private final List<TicketSummary> tickets;
     private final Map<Integer, UUID> ticketBySlot = new HashMap<>();
     private Inventory inventory;
 
-    public TicketsGui(UUID viewerId, List<TicketSummary> tickets) {
-        this.viewerId = viewerId;
-        this.tickets = List.copyOf(tickets);
+    public TicketsGui(OpenGuiPayload payload) {
+        this.viewerId = payload.viewerId();
+        this.title = payload.title();
+        this.hint = payload.hint();
+        this.tickets = List.copyOf(payload.tickets());
     }
 
     public UUID viewerId() {
@@ -43,7 +48,7 @@ public final class TicketsGui implements InventoryHolder {
     @Override
     public Inventory getInventory() {
         if (inventory == null) {
-            inventory = Bukkit.createInventory(this, SIZE, Component.text("Открытые тикеты", NamedTextColor.GOLD));
+            inventory = Bukkit.createInventory(this, SIZE, Component.text(title, NamedTextColor.GOLD));
             populate();
         }
         return inventory;
@@ -63,7 +68,7 @@ public final class TicketsGui implements InventoryHolder {
         }
     }
 
-    private static ItemStack buildHead(TicketSummary summary) {
+    private ItemStack buildHead(TicketSummary summary) {
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) head.getItemMeta();
         if (meta != null) {
@@ -75,7 +80,7 @@ public final class TicketsGui implements InventoryHolder {
             lore.add(Component.text(summary.preview(), NamedTextColor.GRAY)
                     .decoration(TextDecoration.ITALIC, false));
             lore.add(Component.empty());
-            lore.add(Component.text("Нажмите, чтобы принять тикет", NamedTextColor.GREEN)
+            lore.add(Component.text(hint, NamedTextColor.GREEN)
                     .decoration(TextDecoration.ITALIC, false));
             meta.lore(lore);
             head.setItemMeta(meta);

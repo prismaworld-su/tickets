@@ -14,6 +14,9 @@ import smp.cloud.velocity.config.ConfigLoader;
 import smp.cloud.velocity.config.TicketingConfig;
 import smp.cloud.velocity.config.TicketsConfig;
 import smp.cloud.velocity.config.WebhookConfig;
+import smp.cloud.velocity.i18n.Messages;
+import smp.cloud.velocity.i18n.MessagesLoader;
+import smp.cloud.velocity.ticket.TicketMessageFormatter;
 import smp.cloud.velocity.ticket.TicketRegistry;
 import smp.cloud.velocity.ticket.TicketService;
 import smp.cloud.velocity.ticket.command.TicketCommand;
@@ -44,8 +47,9 @@ public class Tickets {
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
         TicketsConfig config = loadConfig();
+        Messages messages = loadMessages();
         startWebhookServer(config.webhook());
-        startTicketing(config.ticketing());
+        startTicketing(config.ticketing(), messages);
     }
 
     @Subscribe
@@ -67,6 +71,15 @@ public class Tickets {
         }
     }
 
+    private Messages loadMessages() {
+        try {
+            return new MessagesLoader(dataDirectory, logger).load();
+        } catch (IOException e) {
+            logger.error("Failed to load messages, using defaults", e);
+            return Messages.defaults();
+        }
+    }
+
     private void startWebhookServer(WebhookConfig config) {
         if (!config.enabled()) {
             logger.info("Webhook server is disabled in configuration");
@@ -85,14 +98,15 @@ public class Tickets {
         }
     }
 
-    private void startTicketing(TicketingConfig config) {
+    private void startTicketing(TicketingConfig config, Messages messages) {
         if (!config.enabled()) {
             logger.info("Ticket system is disabled in configuration");
             return;
         }
         TicketRegistry registry = new TicketRegistry();
-        TicketMessenger messenger = new TicketMessenger(logger);
-        TicketService service = new TicketService(proxy, registry, messenger, logger);
+        TicketMessageFormatter formatter = new TicketMessageFormatter(messages);
+        TicketMessenger messenger = new TicketMessenger(logger, () -> messages);
+        TicketService service = new TicketService(proxy, registry, messenger, formatter, logger);
         messenger.setAcceptHandler(service::onAcceptFromBackend);
         messenger.setStaffStatusHandler(payload -> service.updateBackendStaff(payload.playerId(), payload.staff()));
 

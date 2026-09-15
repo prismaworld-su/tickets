@@ -40,7 +40,7 @@ public final class TicketsPluginMessageListener implements PluginMessageListener
         if (viewer == null) {
             return;
         }
-        TicketsGui gui = new TicketsGui(payload.viewerId(), payload.tickets());
+        TicketsGui gui = new TicketsGui(payload);
         Bukkit.getScheduler().runTask(plugin, () -> viewer.openInventory(gui.getInventory()));
     }
 }
