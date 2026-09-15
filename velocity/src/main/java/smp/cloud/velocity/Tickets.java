@@ -100,17 +100,12 @@ public class Tickets {
         proxy.getEventManager().register(this, messenger);
 
         CommandManager commands = proxy.getCommandManager();
-        CommandMeta.Builder ticketMetaBuilder = commands.metaBuilder("ticket").aliases("t").plugin(this);
-        String prefix = config.chatPrefix();
-        if (!prefix.isEmpty()) {
-            ticketMetaBuilder.aliases(prefix);
-        }
-        commands.register(ticketMetaBuilder.build(), new TicketCommand(service));
+        CommandMeta ticketMeta = commands.metaBuilder("ticket").aliases("t").plugin(this).build();
+        commands.register(ticketMeta, new TicketCommand(service));
         CommandMeta ticketsMeta = commands.metaBuilder("tickets").plugin(this).build();
         commands.register(ticketsMeta, new TicketsCommand(service, config.staffPermission()));
 
         this.ticketMessenger = messenger;
-        logger.info("Ticket system started (aliases='ticket', 't', '{}'; staff-permission='{}')",
-                prefix, config.staffPermission());
+        logger.info("Ticket system started (staff-permission='{}')", config.staffPermission());
     }
 }

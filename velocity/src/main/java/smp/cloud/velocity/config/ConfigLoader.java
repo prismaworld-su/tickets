@@ -32,17 +32,11 @@ public final class ConfigLoader {
             backlog = 0
 
             [tickets]
-            # Enable the ticket system (/ticket, /tickets, ? chat prefix).
+            # Enable the ticket system (/ticket, /t, /tickets).
             enabled = true
 
             # Permission required to open /tickets and accept tickets.
             staff-permission = "tickets.staff"
-
-            # Extra slash-command alias for /ticket. E.g. with "?" you can type
-            # "/? your message" to reach the ticket. Set to an empty string to
-            # disable the extra alias. Signed chat in Minecraft 1.19.1+ makes
-            # non-slash chat prefixes impossible to intercept on the proxy.
-            chat-prefix = "?"
             """;
 
     private final Path dataDirectory;
@@ -89,8 +83,7 @@ public final class ConfigLoader {
         TomlTable ticketsTable = root.getTable("tickets").orElseGet(TomlTable::empty);
         TicketingConfig ticketing = new TicketingConfig(
                 ticketsTable.getBooleanOr("enabled", ticketingDefaults.enabled()),
-                ticketsTable.getStringOr("staff-permission", ticketingDefaults.staffPermission()),
-                ticketsTable.getStringOr("chat-prefix", ticketingDefaults.chatPrefix())
+                ticketsTable.getStringOr("staff-permission", ticketingDefaults.staffPermission())
         );
 
         return new TicketsConfig(webhook, ticketing);
