@@ -1,32 +1,21 @@
-plugins {
-    id("java-library")
-    id("com.gradleup.shadow") version "9.6.1"
-    id("xyz.jpenilla.run-velocity") version "3.1.0"
+allprojects {
+    group = "smp.cloud"
+    version = "1.0-SNAPSHOT"
 }
 
-repositories {
-    mavenCentral()
-    maven("https://repo.papermc.io/repository/maven-public/")
-}
+subprojects {
+    apply(plugin = "java-library")
 
-dependencies {
-    compileOnly("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT")
-    annotationProcessor("com.velocitypowered:velocity-api:3.5.0-SNAPSHOT")
-}
-
-java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
-}
-
-tasks {
-    build {
-        dependsOn(shadowJar)
+    repositories {
+        mavenCentral()
+        maven("https://repo.papermc.io/repository/maven-public/")
     }
 
-    runVelocity {
-        // Configure the Velocity version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
-        velocityVersion("3.5.0-SNAPSHOT")
+    extensions.configure<JavaPluginExtension> {
+        toolchain.languageVersion = JavaLanguageVersion.of(21)
+    }
+
+    tasks.withType<JavaCompile>().configureEach {
+        options.encoding = "UTF-8"
     }
 }
